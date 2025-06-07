@@ -32,6 +32,7 @@
         "vlucas/valitron": "^1.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "symfony/var-dumper": "^7.3"
     }
 }
