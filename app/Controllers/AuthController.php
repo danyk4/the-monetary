@@ -40,12 +40,11 @@ class AuthController
         $v->rule('email', 'email');
         $v->rule('equals', 'confirmPassword', 'password')->label('Confirm Password');
         $v->rule(
-            fn($field, $value, $params, $fields)
-                => ! $this->entityManager->getRepository(User::class)->count(
-                ['email' => $value],
-            ),
+            fn($field, $value, $params, $fields) => ! $this->entityManager->getRepository(User::class)
+                ->count(['email' => $value]),
             'email',
-        )->message('This email is already registered.');
+        )
+            ->message('This email is already registered.');
 
         if ($v->validate()) {
             echo 'Validation passed.';
@@ -73,7 +72,7 @@ class AuthController
         $v->rule('required', ['email', 'password']);
         $v->rule('email', 'email');
 
-        if ( ! $this->auth->attemptLogin($data)) {
+        if (! $this->auth->attemptLogin($data)) {
             throw new ValidationException(['password' => ['Invalid email or password.']]);
         }
 

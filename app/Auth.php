@@ -3,16 +3,18 @@
 namespace App;
 
 use App\Contracts\AuthInterface;
+use App\Contracts\SessionInterface;
 use App\Contracts\UserInterface;
 use App\Contracts\UserProviderServiceInterface;
-use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 
 class Auth implements AuthInterface
 {
     private ?UserInterface $user = null;
 
-    public function __construct(private readonly UserProviderServiceInterface $userProvider) {}
+    public function __construct(private readonly UserProviderServiceInterface $userProvider, private readonly SessionInterface $session)
+    {
+        //
+    }
 
     public function user(): ?UserInterface
     {
@@ -20,15 +22,15 @@ class Auth implements AuthInterface
             return $this->user;
         }
 
-        $userId = $_SESSION['user'] ?? null;
+        $userId = $this->session->get('user');
 
-        if ( ! $userId) {
+        if (! $userId) {
             return null;
         }
 
         $user = $this->userProvider->getById($userId);
 
-        if ( ! $user) {
+        if (! $user) {
             return null;
         }
 
@@ -41,13 +43,12 @@ class Auth implements AuthInterface
     {
         $user = $this->userProvider->getByCredentials($credentials);
 
-        if ( ! $user || ! $this->checkCredentials($user, $credentials)) {
+        if (! $user || ! $this->checkCredentials($user, $credentials)) {
             return false;
         }
 
-        session_regenerate_id();
-
-        $_SESSION['user'] = $user->getId();
+        $this->session->regenerate();
+        $this->session->put('user', $user->getId());
 
         $this->user = $user;
 
@@ -61,7 +62,8 @@ class Auth implements AuthInterface
 
     public function logOut(): void
     {
-        unset($_SESSION['user']);
+        $this->session->forget('user');
+        $this->session->regenerate();
 
         $this->user = null;
     }

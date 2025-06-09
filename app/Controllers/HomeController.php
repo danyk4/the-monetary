@@ -18,6 +18,8 @@ class HomeController
     public function index(Request $request, Response $response): Response
     {
         $user = $request->getAttribute('user');
+//        xdebug_info();
+//        exit;
 
         return $this->twig->render($response, 'dashboard.twig');
     }
