@@ -47,6 +47,10 @@
                     <ul class="dropdown-menu" aria-labelledby="userDropDownMenu">
                         <li>
                             <form action="/logout" method="post">
+                                {#                                {{ csrf.fields raw }} #}
+                                <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                                <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
+
                                 <button class="dropdown-item" href="#">Log Out</button>
                             </form>
                         </li>

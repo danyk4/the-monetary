@@ -16,6 +16,10 @@
                                     Login
                                 </h2>
                                 <form method="post" action="/login">
+                                    {#                                    {{ csrf.fields | raw }} #}
+                                    <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                                    <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
+
                                     <div class="form-outline form-white mb-4">
                                         <input type="email" name="email"
                                                value="{{ old.email }}"
