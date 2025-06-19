@@ -46,6 +46,7 @@
                 </form>
             </div>
         </div>
+        {% include 'categories/edit_category_modal.twig' %}
         {% if categories %}
             <div id="categoriesTable">
                 <table class="table table-striped">
@@ -68,7 +69,7 @@
                                         <form action="/categories/{{ category.id }}" method="post">
                                             <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
                                             <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
-                                            
+
                                             <input type="hidden" name="_METHOD" value="DELETE"/>
                                             <button type="submit" class="btn btn-outline-primary">
                                                 <i class="bi bi-trash3-fill"></i>
