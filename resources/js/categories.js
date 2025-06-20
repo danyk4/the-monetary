@@ -1,4 +1,5 @@
 import { Modal } from 'bootstrap'
+import { get, post } from './ajax'
 
 window.addEventListener('DOMContentLoaded', function () {
     const editCategoryModal = new Modal(document.getElementById('editCategoryModal'))
@@ -7,9 +8,11 @@ window.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function (event) {
             const categoryId = event.currentTarget.getAttribute('data-id')
 
-            fetch(`/categories/${categoryId}`).then(res => res.json()).then(res => {
+            get(`/categories/${categoryId}`).then(response => openEditCategoryModal(editCategoryModal, response))
+
+            /*fetch(`/categories/${categoryId}`).then(res => res.json()).then(res => {
                 openEditCategoryModal(editCategoryModal, res)
-            })
+            })*/
         })
     })
 
@@ -18,7 +21,13 @@ window.addEventListener('DOMContentLoaded', function () {
         // const csrfName = editCategoryModal._element.querySelector('input[name="csrf_name"]').value
         // const csrfValue = editCategoryModal._element.querySelector('input[name="csrf_value"]').value
 
-        fetch(`/categories/${categoryId}`, {
+        post(`/categories/${categoryId}`, {
+            name: editCategoryModal._element.querySelector('input[name="name"]').value,
+        }).then(response => {
+            console.log(response)
+        })
+
+        /*fetch(`/categories/${categoryId}`, {
             method: 'POST',
             body: JSON.stringify({
                 name: editCategoryModal._element.querySelector('input[name="name"]').value,
@@ -28,8 +37,9 @@ window.addEventListener('DOMContentLoaded', function () {
             }),
             headers: {
                 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
             },
-        }).then(res => console.log(res))
+        }).then(res => console.log(res))*/
     })
 })
 
