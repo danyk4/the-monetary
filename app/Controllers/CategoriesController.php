@@ -16,10 +16,10 @@ use Slim\Views\Twig;
 class CategoriesController
 {
     public function __construct(
-        private readonly Twig $twig,
+        private readonly Twig                             $twig,
         private readonly RequestValidatorFactoryInterface $requestValidatorFactory,
-        private readonly CategoryService $categoryService,
-        private readonly ResponseFormatter $responseFormatter,
+        private readonly CategoryService                  $categoryService,
+        private readonly ResponseFormatter                $responseFormatter,
     ) {}
 
     public function index(Request $request, Response $response): Response
@@ -48,7 +48,7 @@ class CategoriesController
     {
         $this->categoryService->delete((int)$args['id']);
 
-        return $response->withHeader('Location', '/categories')->withStatus(302);
+        return $response;
     }
 
     public function get(Request $request, Response $response, array $args): Response

@@ -1,5 +1,5 @@
 import { Modal } from 'bootstrap'
-import { get, post } from './ajax'
+import { get, post, del } from './ajax'
 
 window.addEventListener('DOMContentLoaded', function () {
     const editCategoryModal = new Modal(document.getElementById('editCategoryModal'))
@@ -8,7 +8,9 @@ window.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function (event) {
             const categoryId = event.currentTarget.getAttribute('data-id')
 
-            get(`/categories/${categoryId}`).then(response => openEditCategoryModal(editCategoryModal, response))
+            get(`/categories/${categoryId}`).
+            then(response => response.json()).
+            then(response => openEditCategoryModal(editCategoryModal, response))
 
             /*fetch(`/categories/${categoryId}`).then(res => res.json()).then(res => {
                 openEditCategoryModal(editCategoryModal, res)
@@ -23,8 +25,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
         post(`/categories/${categoryId}`, {
             name: editCategoryModal._element.querySelector('input[name="name"]').value,
-        }).then(response => {
-            console.log(response)
+        }, editCategoryModal._element).then(response => {
+            if (response.ok) {
+                editCategoryModal.hide()
+            }
         })
 
         /*fetch(`/categories/${categoryId}`, {
@@ -41,6 +45,17 @@ window.addEventListener('DOMContentLoaded', function () {
             },
         }).then(res => console.log(res))*/
     })
+
+    document.querySelectorAll('.delete-category-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            const categoryId = event.currentTarget.getAttribute('data-id')
+
+            if (confirm('Are you sure you want to delete this category?')) {
+                del(`/categories/${categoryId}`)
+            }
+        })
+    })
+    
 })
 
 function getCsrfFields () {
@@ -54,8 +69,7 @@ function getCsrfFields () {
     const csrfValue = csrfValueField.content
 
     return {
-        [csrfNameKey]: csrfName,
-        [csrfValueKey]: csrfValue,
+        [csrfNameKey]: csrfName, [csrfValueKey]: csrfValue,
     }
 }
 
